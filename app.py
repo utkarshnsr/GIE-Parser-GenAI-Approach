@@ -55,6 +55,7 @@ def extractGraphCoordinates(imgPath):
   response = model.generate_content([prompt, img])
   return response.text
 
+#sample comment
 file = st.file_uploader("Please upload your graph")
 
 if file:
