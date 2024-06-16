@@ -24,8 +24,8 @@ def identifyGraphType(imgPath):
     if the graph is a line graph then return line graph
     """
   load_dotenv()
-  API_KEY = os.environ.get("GOOGLE_API_KEY")
-  genai.configure(api_key=API_KEY)
+  GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
+  genai.configure(api_key=GOOGLE_API_KEY)
   model = genai.GenerativeModel('gemini-1.5-flash')
   img = Image.open(io.BytesIO(imgPath))
   response = model.generate_content([prompt, img])
@@ -49,7 +49,9 @@ def extractGraphCoordinates(imgPath):
 
     [(1,2, "red"), (3,4, "black")]
     """
-  genai.configure(api_key="AIzaSyDbzF8OtYGXkd_Sezc-imqJduuW8ROkys4")
+  load_dotenv()
+  GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
+  genai.configure(api_key=GOOGLE_API_KEY)
   model = genai.GenerativeModel('gemini-1.5-flash')
   img = Image.open(io.BytesIO(imgPath))
   response = model.generate_content([prompt, img])
