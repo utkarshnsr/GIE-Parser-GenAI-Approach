@@ -19,7 +19,7 @@ Below are the things that need to be done to run this prototype application loca
 - Create a `.env` file in the folder locally to store your [Gemini API KEY](https://ai.google.dev/gemini-api/docs/api-key). Inside the file put the following: <br /> <br />
 `GOOGLE_API_KEY = "YOUR API KEY"`
 
-- Run the `Streamlit` application <br />
+- Run the `Streamlit` application <br /> <br /> 
 `streamlit run app.py`
 
 
