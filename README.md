@@ -8,3 +8,12 @@ This is a Generative AI based approach for the Graph Ingestion Engine project. O
 By building this application we are trying to address the problem of making online graph more accessible. The application is meant for individuals such as scientists, teachers, and webmasters interested in improving the accessibility of their graphs. 
 
 Lately, I have been working on this sample prototype using Streamlit framework for the frontend and free tier version of the Google’s Gemini 1.5 flash model for parsing the information in the inputted graphs. 
+
+## Project Setup 
+
+Below are the things that need to be done to run this prototype application locally. 
+
+- Install all the required Python libraries using the requirements.txt file
+  'pip install -r requirements.txt'
+- fdsa
+
