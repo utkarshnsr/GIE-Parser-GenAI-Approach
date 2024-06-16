@@ -1,6 +1,6 @@
 # GIE-Parser-GenAI-Approach
 
-https://www.youtube.com/watch?v=9ohPBLq7ke0
+[![Watch the video](https://img.youtube.com/vi/9ohPBLq7ke0/0.jpg)](https://www.youtube.com/watch?v=9ohPBLq7ke0)
 
 
 This is a Generative AI based approach for the Graph Ingestion Engine project. Overall, the goal of the project is to build a system that can:
