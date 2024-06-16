@@ -15,5 +15,7 @@ Below are the things that need to be done to run this prototype application loca
 
 - Install all the required Python libraries using the requirements.txt file <br /> <br />
   `pip install -r requirements.txt`
+
+  <br /> <br />
 - fdsa
 
