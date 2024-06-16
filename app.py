@@ -106,7 +106,6 @@ def getCSVFile(df):
 
 def parseAppropriateGraph(graphType, imgBytesData):
    if (graphType == "Bar Graph"):
-      print("1")
       coordinates = extractBarGraphPoints(imgBytesData)
       coordinates = eval(coordinates)
       coordinatesDf = pd.DataFrame(coordinates, columns=['bar name', 'y_axis value', 'bar point color'])
@@ -121,11 +120,14 @@ def parseAppropriateGraph(graphType, imgBytesData):
       coordinates = eval(coordinates)
       coordinatesDf = pd.DataFrame(coordinates, columns=['category name', 'percentage', 'category color'])
       return coordinatesDf
-   else:
+   elif (graphType == "Line Graph"):
       coordinates = extractLineGraphPoints(imgBytesData)
       coordinates = eval(coordinates)
       coordinatesDf = pd.DataFrame(coordinates, columns=['x_axis', 'y_axis', 'coordinate point color'])
       return coordinatesDf
+   else:
+      st.warning("The image you inputted is not a supported graph type.")
+      return None
    
    
    
@@ -145,17 +147,15 @@ def uploadGraphImage():
        st.write(f"The graph you uploaded is a {graphType}. We will now extract the coordinate points for your graph.")
        st.subheader(f"Coordinates View of Your {graphType}")
        coordinatesDf = parseAppropriateGraph(graphType, bytes_data)
-    #    coordinates = extractGraphCoordinates(bytes_data)
-    #    coordinates = eval(coordinates)
-    #    coordinatesDf = pd.DataFrame(coordinates, columns=['x_axis', 'y_axis', 'coordinate point color'])
-       st.write("Below is the dataframe which contains all the coordinate points for the points in the graph.")
-       leftColumn, centerColumn,rightColumn = st.columns(3)
-       with centerColumn:
-          st.dataframe(coordinatesDf)
-       csv = getCSVFile(coordinatesDf)
-       graphFileName = graphFile.name.split(':')[0]
-       csvFileName = graphFileName + "extractedPoints.csv"
-       st.download_button("Download Data Points (CSV)", csv, csvFileName)
+       if coordinatesDf is not None:
+          st.write("Below is the dataframe which contains all the coordinate points for the points in the graph.")
+          leftColumn, centerColumn,rightColumn = st.columns(3)
+          with centerColumn:
+             st.dataframe(coordinatesDf)
+          csv = getCSVFile(coordinatesDf)
+          graphFileName = graphFile.name.split(':')[0]
+          csvFileName = graphFileName + "extractedPoints.csv"
+          st.download_button("Download Data Points (CSV)", csv, csvFileName)
 
 if __name__ == "__main__":
     st.set_page_config(layout="wide")
