@@ -34,32 +34,59 @@ def identifyGraphType(imgPath):
   return response.text
 
 
-def extractGraphCoordinates(imgPath):
+def extractScatterPlotPoints(imgBytesData):
   prompt = """
-    For the graph image that is uploaded, I want you to do the following: 
+    For the scatter plot graph image that is uploaded, I want you to do the following: 
 
-    1) for each point on the graph, get its x and y coordinates and its color
+    1) for each point on the graph, get its x coordinate, y coordinate, and the point color (only the name NOT the rgb or hexcode value)
     2) put the information for each point into a list
-
-
-    if the graph is a pie chart, then do the following:
-
-    1) for each sector get the name of the vector and the percentage it takes up in the graph as well as its color
-    2) put the information for each sector into a list
 
     return the list only (NO OTHER WORDS). Here is an example:
 
-    [(1,2, "red"), (3,4, "black")]
+    [(1,2, "red"), (3,4, "black")] 
     """
   model = genai.GenerativeModel('gemini-1.5-flash')
-  img = Image.open(io.BytesIO(imgPath))
+  img = Image.open(io.BytesIO(imgBytesData))
   response = model.generate_content([prompt, img])
   return response.text
 
 
+def extractLineGraphPoints(imgBytesData):
+   prompt = """
+    For the line graph image that is uploaded, I want you to do the following: 
+
+    1) for each important points on the graph, get the x coordinate, y coordinate, and the point color (only the name NOT the rgb or hexcode value)
+    2) put the information for each point into a list
+
+    return the list only (NO OTHER WORDS). Here is an example:
+
+    [(1,2, "red"), (3,4, "black")] 
+    """
+   model = genai.GenerativeModel('gemini-1.5-flash')
+   img = Image.open(io.BytesIO(imgBytesData))
+   response = model.generate_content([prompt, img])
+   return response.text
+
 def getCSVFile(df):
    csv = df.to_csv(index=False).encode('utf-8')
    return csv
+
+def parseAppropriateGraph(graphType, imgBytesData):
+   if (graphType == "Bar Graph"):
+      print("1")
+   elif (graphType == "Scatter Plot"):
+      coordinates = extractScatterPlotPoints(imgBytesData)
+      coordinates = eval(coordinates)
+      coordinatesDf = pd.DataFrame(coordinates, columns=['x_axis', 'y_axis', 'coordinate point color'])
+      return coordinatesDf
+   elif (graphType == "Pie Chart"):
+      print("3")
+   else:
+      coordinates = extractLineGraphPoints(imgBytesData)
+      coordinates = eval(coordinates)
+      coordinatesDf = pd.DataFrame(coordinates, columns=['x_axis', 'y_axis', 'coordinate point color'])
+      return coordinatesDf
+   
    
    
 
@@ -76,9 +103,10 @@ def uploadGraphImage():
        graphType = identifyGraphType(bytes_data)
        st.write(f"The graph you uploaded is a {graphType}. We will now extract the coordinate points for your graph.")
        st.subheader(f"Coordinates View of Your {graphType}")
-       coordinates = extractGraphCoordinates(bytes_data)
-       coordinates = eval(coordinates)
-       coordinatesDf = pd.DataFrame(coordinates, columns=['x_axis', 'y_axis', 'coordinate point color'])
+       coordinatesDf = parseAppropriateGraph(graphType, bytes_data)
+    #    coordinates = extractGraphCoordinates(bytes_data)
+    #    coordinates = eval(coordinates)
+    #    coordinatesDf = pd.DataFrame(coordinates, columns=['x_axis', 'y_axis', 'coordinate point color'])
        st.write("Below is the dataframe which contains all the coordinate points for the points in the graph.")
        leftColumn, centerColumn,rightColumn = st.columns(3)
        with centerColumn:
