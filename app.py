@@ -57,22 +57,26 @@ def extractGraphCoordinates(imgPath):
   response = model.generate_content([prompt, img])
   return response.text
 
-#sample comment
-file = st.file_uploader("Please upload your graph")
+def main():
+   #sample comment
+    file = st.file_uploader("Please upload your graph")
 
-if file:
-    bytes_data = file.getvalue()
-    st.image(bytes_data)
-    st.write(f'filename: {file.name}')
-    graphType = identifyGraphType(bytes_data)
-    st.write(f'type: {graphType}')
-    coordinates = extractGraphCoordinates(bytes_data)
-    coordinates = eval(coordinates)
-    df = pd.DataFrame(coordinates, columns=['x_axis', 'y_axis', 'coordinate point color'])
-    csv = df.to_csv(index=False).encode('utf-8')
-    st.dataframe(df)
-    csvFileName = file.name + "extractedPoints.csv"
-    st.download_button("Download Data Points", csv, csvFileName)
+    if file:
+        bytes_data = file.getvalue()
+        st.image(bytes_data)
+        st.write(f'filename: {file.name}')
+        graphType = identifyGraphType(bytes_data)
+        st.write(f'type: {graphType}')
+        coordinates = extractGraphCoordinates(bytes_data)
+        coordinates = eval(coordinates)
+        df = pd.DataFrame(coordinates, columns=['x_axis', 'y_axis', 'coordinate point color'])
+        csv = df.to_csv(index=False).encode('utf-8')
+        st.dataframe(df)
+        csvFileName = file.name + "extractedPoints.csv"
+        st.download_button("Download Data Points", csv, csvFileName)
 
 
-    
+
+if __name__ == "__main__":
+    st.set_page_config(layout="wide")
+    main()
