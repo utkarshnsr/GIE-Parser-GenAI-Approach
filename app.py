@@ -7,6 +7,7 @@ import io
 import pandas as pd
 import os
 from dotenv import load_dotenv
+import re
 
 
 def configureGemini():
@@ -27,11 +28,13 @@ def identifyGraphType(imgPath):
     if the graph is a scatter plot then return Scatter Plot
     if the graph is a pie chart then return Pie Chart
     if the graph is a line graph then return Line Graph
+    if the image is not a graph then return "notagraph" string
     """
   model = genai.GenerativeModel('gemini-1.5-flash')
   img = Image.open(io.BytesIO(imgPath))
   response = model.generate_content([prompt, img])
-  return response.text
+  formattedResponse = re.sub(r'[^a-zA-Z0-9]', '', str(response.text))
+  return formattedResponse
 
 
 def extractScatterPlotPoints(imgBytesData):
@@ -98,6 +101,7 @@ def extractPieChartPoints(imgBytesData):
    model = genai.GenerativeModel('gemini-1.5-flash')
    img = Image.open(io.BytesIO(imgBytesData))
    response = model.generate_content([prompt, img])
+   print(response.text)
    return response.text
 
 def getCSVFile(df):
@@ -105,22 +109,31 @@ def getCSVFile(df):
    return csv
 
 def parseAppropriateGraph(graphType, imgBytesData):
-   if (graphType == "Bar Graph"):
+   print(graphType)
+   if (graphType == "BarGraph"):
+      st.write(f"The graph you uploaded is a bar graph. We will now extract the coordinate points for your graph.")
+      st.subheader(f"Coordinates View of Your Bar Graph")
       coordinates = extractBarGraphPoints(imgBytesData)
       coordinates = eval(coordinates)
       coordinatesDf = pd.DataFrame(coordinates, columns=['bar name', 'y_axis value', 'bar point color'])
       return coordinatesDf
-   elif (graphType == "Scatter Plot"):
+   elif (graphType == "ScatterPlot"):
+      st.write(f"The graph you uploaded is a scatter plot. We will now extract the coordinate points for your graph.")
+      st.subheader(f"Coordinates View of Your Scatter Plot")
       coordinates = extractScatterPlotPoints(imgBytesData)
       coordinates = eval(coordinates)
       coordinatesDf = pd.DataFrame(coordinates, columns=['x_axis', 'y_axis', 'coordinate point color'])
       return coordinatesDf
-   elif (graphType == "Pie Chart"):
+   elif (graphType == "PieChart"):
+      st.write(f"The graph you uploaded is a pie chart. We will now extract the coordinate points for your graph.")
+      st.subheader(f"Coordinates View of Your Pie Chart")
       coordinates = extractPieChartPoints(imgBytesData)
       coordinates = eval(coordinates)
       coordinatesDf = pd.DataFrame(coordinates, columns=['category name', 'percentage', 'category color'])
       return coordinatesDf
-   elif (graphType == "Line Graph"):
+   elif (graphType == "LineGraph"):
+      st.write(f"The graph you uploaded is a line graph. We will now extract the coordinate points for your graph.")
+      st.subheader(f"Coordinates View of Your Line Graph")
       coordinates = extractLineGraphPoints(imgBytesData)
       coordinates = eval(coordinates)
       coordinatesDf = pd.DataFrame(coordinates, columns=['x_axis', 'y_axis', 'coordinate point color'])
@@ -128,9 +141,7 @@ def parseAppropriateGraph(graphType, imgBytesData):
    else:
       st.warning("The image you inputted is not a supported graph type.")
       return None
-   
-   
-   
+      
 
 def uploadGraphImage():
     st.subheader("File Uploader")
@@ -143,19 +154,17 @@ def uploadGraphImage():
        with centerColumn:
           st.image(bytes_data)
        graphType = identifyGraphType(bytes_data)
-       print(graphType)
-       st.write(f"The graph you uploaded is a {graphType}. We will now extract the coordinate points for your graph.")
-       st.subheader(f"Coordinates View of Your {graphType}")
+       graphType = str(graphType)
        coordinatesDf = parseAppropriateGraph(graphType, bytes_data)
        if coordinatesDf is not None:
-          st.write("Below is the dataframe which contains all the coordinate points for the points in the graph.")
-          leftColumn, centerColumn,rightColumn = st.columns(3)
-          with centerColumn:
-             st.dataframe(coordinatesDf)
-          csv = getCSVFile(coordinatesDf)
-          graphFileName = graphFile.name.split(':')[0]
-          csvFileName = graphFileName + "extractedPoints.csv"
-          st.download_button("Download Data Points (CSV)", csv, csvFileName)
+            st.write("Below is the dataframe which contains all the coordinate points for the points in the graph.")
+            leftColumn, centerColumn,rightColumn = st.columns(3)
+            with centerColumn:
+                st.dataframe(coordinatesDf)
+            csv = getCSVFile(coordinatesDf)
+            graphFileName = graphFile.name.split(':')[0]
+            csvFileName = graphFileName + "extractedPoints.csv"
+            st.download_button("Download Data Points (CSV)", csv, csvFileName)
 
 if __name__ == "__main__":
     st.set_page_config(layout="wide")
