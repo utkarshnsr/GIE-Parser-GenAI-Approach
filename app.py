@@ -67,6 +67,39 @@ def extractLineGraphPoints(imgBytesData):
    response = model.generate_content([prompt, img])
    return response.text
 
+def extractBarGraphPoints(imgBytesData):
+   prompt = """
+    For the bar graph image that is uploaded, I want you to do the following: 
+
+    1) for each bar get the x value, y value, and the bar color (only the name NOT the rgb or hexcode value)
+    2) put the information for each bar into a list
+
+    return the list only (NO OTHER WORDS). Here is an example:
+
+    [("golf",6, "red"), ("tennis",14, "yellow")] 
+    """
+   model = genai.GenerativeModel('gemini-1.5-flash')
+   img = Image.open(io.BytesIO(imgBytesData))
+   response = model.generate_content([prompt, img])
+   return response.text
+
+def extractPieChartPoints(imgBytesData):
+   prompt = """
+    For the pie chart image that is uploaded, I want you to do the following: 
+
+    1) for each pie in the pie chart get the name of the category, the percentage the category takes up, and the color of the pie (only the name NOT the rgb or hexcode value)
+    2) ensure that all the percentages for the pies combined add to up 100%
+    3) put the information for each bar into a list
+    
+    return the list only (NO OTHER WORDS). Here is an example:
+
+    [("language",30, "red"), ("math",40, "yellow")] 
+    """
+   model = genai.GenerativeModel('gemini-1.5-flash')
+   img = Image.open(io.BytesIO(imgBytesData))
+   response = model.generate_content([prompt, img])
+   return response.text
+
 def getCSVFile(df):
    csv = df.to_csv(index=False).encode('utf-8')
    return csv
@@ -74,13 +107,20 @@ def getCSVFile(df):
 def parseAppropriateGraph(graphType, imgBytesData):
    if (graphType == "Bar Graph"):
       print("1")
+      coordinates = extractBarGraphPoints(imgBytesData)
+      coordinates = eval(coordinates)
+      coordinatesDf = pd.DataFrame(coordinates, columns=['bar name', 'y_axis value', 'bar point color'])
+      return coordinatesDf
    elif (graphType == "Scatter Plot"):
       coordinates = extractScatterPlotPoints(imgBytesData)
       coordinates = eval(coordinates)
       coordinatesDf = pd.DataFrame(coordinates, columns=['x_axis', 'y_axis', 'coordinate point color'])
       return coordinatesDf
    elif (graphType == "Pie Chart"):
-      print("3")
+      coordinates = extractPieChartPoints(imgBytesData)
+      coordinates = eval(coordinates)
+      coordinatesDf = pd.DataFrame(coordinates, columns=['category name', 'percentage', 'category color'])
+      return coordinatesDf
    else:
       coordinates = extractLineGraphPoints(imgBytesData)
       coordinates = eval(coordinates)
@@ -101,6 +141,7 @@ def uploadGraphImage():
        with centerColumn:
           st.image(bytes_data)
        graphType = identifyGraphType(bytes_data)
+       print(graphType)
        st.write(f"The graph you uploaded is a {graphType}. We will now extract the coordinate points for your graph.")
        st.subheader(f"Coordinates View of Your {graphType}")
        coordinatesDf = parseAppropriateGraph(graphType, bytes_data)
@@ -118,8 +159,8 @@ def uploadGraphImage():
 
 if __name__ == "__main__":
     st.set_page_config(layout="wide")
-    st.markdown("<h1 style='text-align: center;'>Graph Ingestion Engine</h1>", unsafe_allow_html=True)
-    st.write("This is the Graph Ingestion Engine (GIE) application built using Generative AI approach. Please upload an image of the graph you wish to parse. **Note:** the system currently accepts line graphs and scatter plots.")
+    st.markdown("<h1 style='text-align: center;'>Graph Ingestion Engine (GIE)</h1>", unsafe_allow_html=True)
+    st.write("This is the GIE application built using Generative AI approach. Please upload an image of the graph you wish to parse. **Note:** The system accepts the following graph types:")
     #configuring the Gemini Flash model
     configureGemini()
     #the method below is called to upload graph images to the app
