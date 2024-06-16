@@ -101,7 +101,6 @@ def extractPieChartPoints(imgBytesData):
    model = genai.GenerativeModel('gemini-1.5-flash')
    img = Image.open(io.BytesIO(imgBytesData))
    response = model.generate_content([prompt, img])
-   print(response.text)
    return response.text
 
 def getCSVFile(df):
@@ -109,7 +108,6 @@ def getCSVFile(df):
    return csv
 
 def parseAppropriateGraph(graphType, imgBytesData):
-   print(graphType)
    if (graphType == "BarGraph"):
       st.write(f"The graph you uploaded is a bar graph. We will now extract the coordinate points for your graph.")
       st.subheader(f"Coordinates View of Your Bar Graph")
@@ -162,7 +160,7 @@ def uploadGraphImage():
             with centerColumn:
                 st.dataframe(coordinatesDf)
             csv = getCSVFile(coordinatesDf)
-            graphFileName = graphFile.name.split(':')[0]
+            graphFileName = graphFile.name.split('.')[0]
             csvFileName = graphFileName + "extractedPoints.csv"
             st.download_button("Download Data Points (CSV)", csv, csvFileName)
 
