@@ -88,23 +88,6 @@ def uploadGraphImage():
        csvFileName = graphFileName + "extractedPoints.csv"
        st.download_button("Download Data Points (CSV)", csv, csvFileName)
 
-
-    # if file:
-    #     bytes_data = file.getvalue()
-    #     st.image(bytes_data)
-    #     st.write(f'filename: {file.name}')
-    #     graphType = identifyGraphType(bytes_data)
-    #     st.write(f'type: {graphType}')
-    #     coordinates = extractGraphCoordinates(bytes_data)
-    #     coordinates = eval(coordinates)
-    #     df = pd.DataFrame(coordinates, columns=['x_axis', 'y_axis', 'coordinate point color'])
-    #     csv = df.to_csv(index=False).encode('utf-8')
-    #     st.dataframe(df)
-    #     csvFileName = file.name + "extractedPoints.csv"
-    #     st.download_button("Download Data Points", csv, csvFileName)
-
-
-
 if __name__ == "__main__":
     st.set_page_config(layout="wide")
     st.markdown("<h1 style='text-align: center;'>Graph Ingestion Engine</h1>", unsafe_allow_html=True)
