@@ -23,10 +23,10 @@ def identifyGraphType(imgPath):
 
     Just return the answer as a string. Here is an example:
 
-    if the graph is a bar graph then return bar graph
-    if the graph is a scatter plot then return scatter plot
-    if the graph is a pie chart then return pie chart
-    if the graph is a line graph then return line graph
+    if the graph is a bar graph then return Bar Graph
+    if the graph is a scatter plot then return Scatter Plot
+    if the graph is a pie chart then return Pie Chart
+    if the graph is a line graph then return Line Graph
     """
   model = genai.GenerativeModel('gemini-1.5-flash')
   img = Image.open(io.BytesIO(imgPath))
@@ -44,7 +44,7 @@ def extractGraphCoordinates(imgPath):
 
     if the graph is a pie chart, then do the following:
 
-    1) for each sector get the name of the vector and the percentage it takes up in the graph
+    1) for each sector get the name of the vector and the percentage it takes up in the graph as well as its color
     2) put the information for each sector into a list
 
     return the list only (NO OTHER WORDS). Here is an example:
@@ -75,7 +75,7 @@ def uploadGraphImage():
           st.image(bytes_data)
        graphType = identifyGraphType(bytes_data)
        st.write(f"The graph you uploaded is a {graphType}. We will now extract the coordinate points for your graph.")
-       st.subheader("Graph Coordinates View")
+       st.subheader(f"Coordinates View of Your {graphType}")
        coordinates = extractGraphCoordinates(bytes_data)
        coordinates = eval(coordinates)
        coordinatesDf = pd.DataFrame(coordinates, columns=['x_axis', 'y_axis', 'coordinate point color'])
