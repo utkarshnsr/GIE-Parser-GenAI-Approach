@@ -161,6 +161,7 @@ if __name__ == "__main__":
     st.set_page_config(layout="wide")
     st.markdown("<h1 style='text-align: center;'>Graph Ingestion Engine (GIE)</h1>", unsafe_allow_html=True)
     st.write("This is the GIE application built using Generative AI approach. Please upload an image of the graph you wish to parse. **Note:** The system accepts the following graph types:")
+    st.image("images/acceptedGraphTypes.png",width=700)
     #configuring the Gemini Flash model
     configureGemini()
     #the method below is called to upload graph images to the app
