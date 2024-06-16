@@ -57,9 +57,9 @@ def extractGraphCoordinates(imgPath):
   response = model.generate_content([prompt, img])
   return response.text
 
-def main():
-   #sample comment
-    file = st.file_uploader("Please upload your graph")
+def uploadGraphImage():
+    st.subheader("File Uploader")
+    file = st.file_uploader("Please upload your graph",type=['png', 'jpg'])
 
     if file:
         bytes_data = file.getvalue()
@@ -79,4 +79,7 @@ def main():
 
 if __name__ == "__main__":
     st.set_page_config(layout="wide")
-    main()
+    st.markdown("<h1 style='text-align: center;'>Graph Ingestion Engine</h1>", unsafe_allow_html=True)
+    st.write("This is the Graph Ingestion Engine (GIE) application built using Generative AI approach. Please upload an image of the graph you wish to parse. **Note:** the system currently accepts line graphs and scatter plots.")
+    #the method below is called to upload graph images to the app
+    uploadGraphImage()
