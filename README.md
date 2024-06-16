@@ -1,9 +1,10 @@
 # GIE-Parser-GenAI-Approach
 
-Overall, the goal of the project is to build a system that can:
+This is a Generative AI based approach for the Graph Ingestion Engine project. Overall, the goal of the project is to build a system that can:
 
 - Reverse engineer data-points from graph
 - Create aural representations of the data
 
-
 By building this application we are trying to address the problem of making online graph more accessible. The application is meant for individuals such as scientists, teachers, and webmasters interested in improving the accessibility of their graphs. 
+
+Lately, I have been working on this sample prototype using Streamlit framework for the frontend and free tier version of the Google’s Gemini 1.5 flash model for parsing the information in the inputted graphs. 
