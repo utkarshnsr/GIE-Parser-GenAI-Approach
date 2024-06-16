@@ -14,6 +14,6 @@ Lately, I have been working on this sample prototype using Streamlit framework f
 Below are the things that need to be done to run this prototype application locally. 
 
 - Install all the required Python libraries using the requirements.txt file
-  'pip install -r requirements.txt'
+  `pip install -r requirements.txt`
 - fdsa
 
