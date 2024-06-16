@@ -1,5 +1,7 @@
 # GIE-Parser-GenAI-Approach
 
+Below is a demo of the prototype:
+
 [![Watch the video](https://img.youtube.com/vi/9ohPBLq7ke0/0.jpg)](https://www.youtube.com/watch?v=9ohPBLq7ke0)
 
 
