@@ -12,7 +12,7 @@ import re
 
 def configureGemini():
    load_dotenv()
-   GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
+   GOOGLE_API_KEY = st.secrets["GOOGLE_API_KEY"]
    genai.configure(api_key=GOOGLE_API_KEY)
 
 
